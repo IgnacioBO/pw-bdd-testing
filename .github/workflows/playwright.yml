@@ -89,3 +89,47 @@ jobs:
         name: html-report--attempt-${{ github.run_attempt }}
         path: cucumber-report
         retention-days: 14
+  
+  publish-cucumber-report:
+    needs: merge-reports
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/download-artifact@v5
+        with:
+          name: merged-cucumber-report
+          path: .
+
+      - name: Publicar reporte en Cucumber Reports
+        id: publish
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          FILE="cucumber-report/messages.ndjson"
+
+          # 1) Crear reporte
+          curl -sS -D headers.txt -o response.txt \
+            https://messages.cucumber.io/api/reports
+
+          # 2) Sacar upload URL desde header Location
+          UPLOAD_URL="$(awk 'BEGIN{IGNORECASE=1} /^location: /{sub(/\r$/,"",$2); print $2}' headers.txt | tail -1)"
+
+          # 3) Sacar report URL pública desde el body
+          REPORT_URL="$(grep -Eo 'https://reports\.cucumber\.io/report/[A-Za-z0-9_-]+' response.txt | head -1)"
+
+          test -n "$UPLOAD_URL"
+          test -n "$REPORT_URL"
+
+          # 4) Subir el ndjson
+          curl -sS -X PUT \
+            --upload-file "$FILE" \
+            "$UPLOAD_URL"
+
+          # 5) Exponer output y summary
+          echo "report_url=$REPORT_URL" >> "$GITHUB_OUTPUT"
+          echo "### Cucumber Report" >> "$GITHUB_STEP_SUMMARY"
+          echo "$REPORT_URL" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Mostrar link
+        run: echo "Reporte => ${{ steps.publish.outputs.report_url }}"

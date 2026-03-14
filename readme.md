@@ -269,3 +269,12 @@ await $testInfo.attach('log-evento', {
        body: "log desde el step de login",
       contentType: 'text/plain',
     }) 
+
+**como publicar en reports.cucumber.io**
+1) Generas un archivo .ndjson de Cucumber Messages desde playwright-bdd.
+para eso agregar  cucumberReporter('message', { outputFile: 'cucumber-report/messages.ndjson', skipAttachments: ['text/x.cucumber.log+plain'] })  
+2) Ir a https://messages.cucumber.io/api/reports
+3) Buscar en las repsons headers "Location"
+4) Copiar la URL
+5) COn postman o automatico hacer un PUT con el archivo .ndjson (en postman debe ir en el body conmo binary)
+6) Luego ingesar a la url que se entrega al comienzo (https://reports.cucumber.io/reports/xxxxxx)
