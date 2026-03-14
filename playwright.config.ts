@@ -23,6 +23,11 @@ const testDir = defineBddConfig({
  dotenv.config({ path: path.resolve(__dirname, `.env.${envir}.${country}`) });
  //Se cargan .local para variables sensibles 
  dotenv.config({ path: path.resolve(__dirname, `.env.${envir}.${country}.local`), override: true }); 
+
+
+ //Para definir si se esta corriendo en modo shard o no, esto es util para configurar el reporte.
+ const isShardRun = process.argv.some((a) => a.startsWith('--shard'));
+
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
@@ -37,7 +42,12 @@ export default defineConfig({
   /* Opt out of parallel tests on CI. */
   workers: process.env.CI ? 5 : 1,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-  reporter: process.env.CI ? 'blob' : [
+  //Si es un shard run, se usa el reporte blob para luego mergear los reportes de cada shard en un reporte html
+  reporter: process.env.CI ? (isShardRun ? 'blob' : [
+    ['html'],
+    cucumberReporter('html', { outputFile: 'cucumber-report/index.html', externalAttachments: true, }),
+    cucumberReporter('json', { outputFile: 'cucumber-report/report.json' })  
+  ]) : [
     ['html'],
     cucumberReporter('html', { outputFile: 'cucumber-report/index.html', externalAttachments: true, }),
     cucumberReporter('json', { outputFile: 'cucumber-report/report.json' })  
