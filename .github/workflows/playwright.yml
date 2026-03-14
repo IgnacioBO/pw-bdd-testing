@@ -41,7 +41,7 @@ jobs:
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
     - name: Run Playwright tests
-      run: npx bddgen --tags ${{ inputs.tags }} && HEADED=false npx playwright test --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
+      run: npx bddgen --tags "${{ inputs.tags }}" && HEADED=false npx playwright test --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
     - name: Upload blob report to GitHub Actions Artifacts
       if: ${{ !cancelled() }}
       uses: actions/upload-artifact@v4
@@ -71,7 +71,7 @@ jobs:
       run: npm ci
     #Hay que generar los BDD specs antes de mergear los reportes
     - name: Generate BDD specs
-      run: npx bddgen --tags ${{ inputs.tags }}
+      run: npx bddgen --tags "${{ inputs.tags }}"
 
     - name: Download blob reports from GitHub Actions Artifacts
       uses: actions/download-artifact@v4
