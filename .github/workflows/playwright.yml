@@ -89,18 +89,30 @@ jobs:
         name: html-report--attempt-${{ github.run_attempt }}
         path: cucumber-report
         retention-days: 14
+    
+    - name: Verificar NDJSON
+      run: test -f cucumber-report/messages.ndjson
+
+    - name: Upload merged cucumber ndjson
+      uses: actions/upload-artifact@v4
+      with:
+          name: merged-cucumber-report
+          path: cucumber-report/messages.ndjson
+          retention-days: 1
   
   publish-cucumber-report:
-    needs: merge-reports
+    if: ${{ !cancelled() }}
+    needs: [merge-reports]
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/download-artifact@v5
+      - name: Download merged cucumber ndjson
+        uses: actions/download-artifact@v5
         with:
           name: merged-cucumber-report
-          path: .
+          path: cucumber-report
 
-      - name: Publicar reporte en Cucumber Reports
+      - name: Publish to Cucumber Reports
         id: publish
         shell: bash
         run: |
@@ -108,25 +120,17 @@ jobs:
 
           FILE="cucumber-report/messages.ndjson"
 
-          # 1) Crear reporte
-          curl -sS -D headers.txt -o response.txt \
+          curl -fsS -D headers.txt -o response.txt \
             https://messages.cucumber.io/api/reports
 
-          # 2) Sacar upload URL desde header Location
-          UPLOAD_URL="$(awk 'BEGIN{IGNORECASE=1} /^location: /{sub(/\r$/,"",$2); print $2}' headers.txt | tail -1)"
-
-          # 3) Sacar report URL pública desde el body
+          UPLOAD_URL="$(awk 'BEGIN{IGNORECASE=1} /^location: /{sub(/\r$/,""); print $2}' headers.txt | tail -1)"
           REPORT_URL="$(grep -Eo 'https://reports\.cucumber\.io/report/[A-Za-z0-9_-]+' response.txt | head -1)"
 
           test -n "$UPLOAD_URL"
           test -n "$REPORT_URL"
 
-          # 4) Subir el ndjson
-          curl -sS -X PUT \
-            --upload-file "$FILE" \
-            "$UPLOAD_URL"
+          curl -fsS -X PUT --upload-file "$FILE" "$UPLOAD_URL"
 
-          # 5) Exponer output y summary
           echo "report_url=$REPORT_URL" >> "$GITHUB_OUTPUT"
           echo "### Cucumber Report" >> "$GITHUB_STEP_SUMMARY"
           echo "$REPORT_URL" >> "$GITHUB_STEP_SUMMARY"
