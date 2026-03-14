@@ -120,20 +120,40 @@ jobs:
 
           FILE="cucumber-report/messages.ndjson"
 
-          curl -fsS -D headers.txt -o response.txt \
+          echo "Revisando archivo..."
+          ls -l "$FILE"
+
+          echo "Creando reporte..."
+          curl -sS -D headers.txt -o response.txt \
             https://messages.cucumber.io/api/reports
 
-          UPLOAD_URL="$(awk 'BEGIN{IGNORECASE=1} /^location: /{sub(/\r$/,""); print $2}' headers.txt | tail -1)"
-          REPORT_URL="$(grep -Eo 'https://reports\.cucumber\.io/report/[A-Za-z0-9_-]+' response.txt | head -1)"
+          echo "----- headers.txt -----"
+          cat headers.txt
+          echo "----- response.txt -----"
+          cat response.txt
 
-          test -n "$UPLOAD_URL"
-          test -n "$REPORT_URL"
+          UPLOAD_URL="$(awk 'BEGIN{IGNORECASE=1} /^location: /{gsub(/\r/,"",$2); print $2}' headers.txt | tail -1)"
+          REPORT_URL="$(grep -Eo 'https://reports\.cucumber\.io/report/[^[:space:]|]+' response.txt | head -1)"
 
-          curl -fsS -X PUT --upload-file "$FILE" "$UPLOAD_URL"
+          echo "UPLOAD_URL=$UPLOAD_URL"
+          echo "REPORT_URL=$REPORT_URL"
+
+          if [ -z "${UPLOAD_URL:-}" ]; then
+            echo "No se pudo extraer Location desde headers.txt"
+            exit 1
+          fi
+
+          if [ -z "${REPORT_URL:-}" ]; then
+            echo "No se pudo extraer la URL pública desde response.txt"
+            exit 1
+          fi
+
+          echo "Subiendo NDJSON..."
+          curl -sS -X PUT --upload-file "$FILE" "$UPLOAD_URL"
 
           echo "report_url=$REPORT_URL" >> "$GITHUB_OUTPUT"
           echo "### Cucumber Report" >> "$GITHUB_STEP_SUMMARY"
           echo "$REPORT_URL" >> "$GITHUB_STEP_SUMMARY"
-
+      
       - name: Mostrar link
         run: echo "Reporte => ${{ steps.publish.outputs.report_url }}"
