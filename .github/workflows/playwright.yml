@@ -37,7 +37,7 @@ jobs:
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
     - name: Run Playwright tests
-      run: HEADED=false npx bddgen && npx playwright test --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
+      run: npx bddgen && HEADED=false npx playwright test --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
     - name: Upload blob report to GitHub Actions Artifacts
       if: ${{ !cancelled() }}
       uses: actions/upload-artifact@v4
@@ -75,5 +75,5 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: html-report--attempt-${{ github.run_attempt }}
-        path: playwright-report
+        path: cucumber-report
         retention-days: 14
