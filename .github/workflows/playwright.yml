@@ -52,6 +52,11 @@ jobs:
     # needs significa que esta tarea se ejecutará después de la tarea "test". Si "test" falla, esta tarea aún se ejecutará debido a la condición if.
     needs: [test]
 
+    environment: ${{ inputs.target_env || 'qa.cl' }} #Por defecto ejecutare el env de qa.cl al hacer push
+    env: #Aqui sacaremos test_user y test_pass de los secrets de github actions
+      TEST_USER: ${{ secrets.TEST_USER }}
+      TEST_PASS: ${{ secrets.TEST_PASS }}
+
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
