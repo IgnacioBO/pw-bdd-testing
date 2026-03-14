@@ -133,20 +133,13 @@ jobs:
           cat response.txt
 
           UPLOAD_URL="$(awk 'BEGIN{IGNORECASE=1} /^location: /{gsub(/\r/,"",$2); print $2}' headers.txt | tail -1)"
-          REPORT_URL="$(grep -Eo 'https://reports\.cucumber\.io/report/[^[:space:]|]+' response.txt | head -1)"
+          REPORT_URL="$(grep -Eo 'https://reports\.cucumber\.io/reports/[^[:space:]|]+' response.txt | head -1)"
 
           echo "UPLOAD_URL=$UPLOAD_URL"
           echo "REPORT_URL=$REPORT_URL"
 
-          if [ -z "${UPLOAD_URL:-}" ]; then
-            echo "No se pudo extraer Location desde headers.txt"
-            exit 1
-          fi
-
-          if [ -z "${REPORT_URL:-}" ]; then
-            echo "No se pudo extraer la URL pública desde response.txt"
-            exit 1
-          fi
+          test -n "$UPLOAD_URL"
+          test -n "$REPORT_URL"
 
           echo "Subiendo NDJSON..."
           curl -sS -X PUT --upload-file "$FILE" "$UPLOAD_URL"
