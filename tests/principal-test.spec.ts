@@ -23,7 +23,7 @@ test.describe('Feature: Productos', () => {
 
         const user: string = process.env.TEST_USER || ""; 
         const pass: string = process.env.TEST_PASS || "";
-        const url: string = env.urls.frontend;
+        const url: string = env.URL;
         const loginPage = new LoginPage(page);
         const homePage = new HomePage(page);
         const productPage = new ProductPage(page);
@@ -139,7 +139,7 @@ test('comprar un producto OLD 2', async ({page}) => {
     
     const user: string = process.env.TEST_USER || ""; 
     const pass: string = process.env.TEST_PASS || "";
-    const url: string = env.urls.frontend;
+    const url: string = env.URL;
     const loginPage = new LoginPage(page);
     const homePage = new HomePage(page);
 

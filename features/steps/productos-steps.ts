@@ -19,7 +19,7 @@ Given('Estoy logueado', async ({ page, loginPage, ctx, auth, $workerInfo, $testI
 
     const user: string = process.env.TEST_USER || ""; 
     const pass: string = process.env.TEST_PASS || "";
-    const url: string = env.urls.frontend
+    const url: string = env.URL;
     log.info('Iniciando el test de compra de productos');
     await loginPage.login(url, user, pass);
     await loginPage.verifyLoginSuccess();
@@ -66,7 +66,7 @@ Given('Estoy logueado con {string}', async ({loginPage}, arg: string) => {
   log.info(`Iniciando el test de compra de productos con el usuario: ${arg}`);
     const user: string = process.env.TEST_USER || ""; 
     const pass: string = process.env.TEST_PASS || "";
-    const url: string = env.urls.frontend
+    const url: string = env.URL;
     log.info('Iniciando el test de compra de productos');
     await loginPage.login(url, user, pass);
     await loginPage.verifyLoginSuccess();

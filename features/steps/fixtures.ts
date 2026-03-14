@@ -38,7 +38,7 @@ export const test = base.extend<Fixtures, WorkerFixtures>({
         const loginPage = new LoginPage(page);
         const user: string = process.env.TEST_USER || "";
         const pass: string = process.env.TEST_PASS || "";
-        const url: string = env.urls.frontend
+        const url: string = env.URL
         await loginPage.login(url, user, pass);
         await loginPage.verifyLoginSuccess();
         await use();
