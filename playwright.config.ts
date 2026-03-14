@@ -40,7 +40,7 @@ export default defineConfig({
   /* Retry on CI only */
   retries: process.env.CI ? 2 : 0,
   /* Opt out of parallel tests on CI. */
-  workers: process.env.CI ? 5 : 1,
+  workers: process.env.CI ? 5 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   //Si es un shard run y en CI, se usa el reporte blob para luego mergear los reportes de cada shard en un reporte html
   //Si no es shard se generan los reportes (util cuando no es shard o cuando se quiere mergear los rerpotes)
