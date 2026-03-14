@@ -7,9 +7,15 @@ import { LoginPage } from '../../pageobjects/login-page';
 
 import { Given, When, Then } from './fixtures';
 
-Given('Estoy logueado', async ({ page, loginPage, ctx, auth, $workerInfo}) => {
+Given('Estoy logueado', async ({ page, loginPage, ctx, auth, $workerInfo, $testInfo}) => {
     ctx.nuevoLoco ="Soy un valor en el contexto";
     log.debug(`Información del worker: ${JSON.stringify($workerInfo.workerIndex)}`);
+
+    //Este permite hacer un log especiofico para este step y peude verse en el reporte de cucumber
+    await $testInfo.attach('log-evento', {
+       body: "log desde el step de login",
+      contentType: 'text/plain',
+    }) 
 
     const user: string = process.env.TEST_USER || ""; 
     const pass: string = process.env.TEST_PASS || "";

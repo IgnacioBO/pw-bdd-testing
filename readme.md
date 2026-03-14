@@ -260,3 +260,12 @@ export const test = base.extend<Fixtures>({
 
 
 
+
+**Para skipear los logs: skipAttachments: ['text/x.cucumber.log+plain']**
+
+
+**Hacer attach de logs en el reporte teniendo skip los logs fde consolas**
+await $testInfo.attach('log-evento', {
+       body: "log desde el step de login",
+      contentType: 'text/plain',
+    }) 

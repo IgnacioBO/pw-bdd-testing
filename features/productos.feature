@@ -4,11 +4,10 @@ Feature: Flujo productos
         Given Estoy logueado
         When Agrego un producto al carrito
         Then Se completa la compra del productos
-
+        
     @POM2
     Scenario: Compra de productos2
         Given Estoy logueado con "Alguien"
-
 
     @POM3
     Scenario: Compra de productos3

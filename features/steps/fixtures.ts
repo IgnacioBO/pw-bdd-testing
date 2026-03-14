@@ -93,4 +93,4 @@ export const test = base.extend<Fixtures, WorkerFixtures>({
     },
 });
 
-export const { Given, When, Then, BeforeWorker } = createBdd(test);
+export const { Given, When, Then, BeforeWorker, AfterWorker, BeforeScenario, AfterScenario, BeforeStep, AfterStep } = createBdd(test);

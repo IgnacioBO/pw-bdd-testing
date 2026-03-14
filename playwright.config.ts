@@ -46,12 +46,12 @@ export default defineConfig({
   //Si no es shard se generan los reportes (util cuando no es shard o cuando se quiere mergear los rerpotes)
   reporter: process.env.CI ? (isShardRun ? 'blob' : [
     ['html'],
-    cucumberReporter('html', { outputFile: 'cucumber-report/index.html', externalAttachments: true, }),
-    cucumberReporter('json', { outputFile: 'cucumber-report/report.json' })  
+    cucumberReporter('html', { outputFile: 'cucumber-report/index.html', externalAttachments: true, skipAttachments: ['text/x.cucumber.log+plain'] }),
+    cucumberReporter('json', { outputFile: 'cucumber-report/report.json', skipAttachments: ['text/x.cucumber.log+plain'] })  
   ]) : [
     ['html'],
-    cucumberReporter('html', { outputFile: 'cucumber-report/index.html', externalAttachments: true, }),
-    cucumberReporter('json', { outputFile: 'cucumber-report/report.json' })  
+    cucumberReporter('html', { outputFile: 'cucumber-report/index.html', externalAttachments: true, skipAttachments: ['text/x.cucumber.log+plain'] }),
+    cucumberReporter('json', { outputFile: 'cucumber-report/report.json', skipAttachments: ['text/x.cucumber.log+plain'] })  
   ],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
