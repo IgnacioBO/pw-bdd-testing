@@ -75,6 +75,7 @@ npx bddgen && npx playwright test
 **GENERAR un fixture.ts -> ESTE DEBE ESTAR EN LA MISMA CARPETA DE LOS STEPS PARA NO GENERAR ERRORES**
 1. Genrar un fixture.ts para poder inyectar las page a los steps sin probelmas
 **Ejemplo**
+
     ```ts
     import { test as base, createBdd } from 'playwright-bdd';
     import { LoginPage } from '../pageobjects/login-page';
@@ -156,11 +157,14 @@ Given('I do something', async ({ browserName, $test }) => {
 ```
 
 ejemplos:
-- `$test.skip() // Se salta el test`
-- `await $testInfo.attach('producto-en-carrito', {
-        body: await page.screenshot({path: 'screenshots/product-in-cart2.png'}),
-        contentType: 'image/png'
-    }); //Para SS`
+- `$test.skip()` // Se salta el test
+- Para SS
+  ```ts
+  await $testInfo.attach('producto-en-carrito', {
+          body: await page.screenshot({path: 'screenshots/product-in-cart2.png'}),
+          contentType: 'image/png'
+      }); //Para SS
+  ```
 - `console.log($step.title)` //Imprimie el titulo del step
 - `console.log($tags)` //imprime un arrya con los tags
 - Overwrite the viewport for scenarios with the `@mobile` tag, EJEMPLO de usar viewer epsecifico si es `@mobile`
@@ -176,16 +180,24 @@ ejemplos:
   });
   ```
 
-**CUCUMBER REPORT**
-reporter: [cucumberReporter('html', { outputFile: 'cucumber-report/index.html', externalAttachments: true, })]
 
-UNa manera mas avanzada, para que CI ocupe blob y normal use rel reprot html de pw, y html y json de cucumber
+**CUCUMBER REPORT**
+```ts
+reporter: 
+[cucumberReporter('html', 
+  { outputFile: 'cucumber-report/index.html', externalAttachments: true, })
+]
+```
+
+UNa manera mas avanzada, para que CI ocupe blob y normal use el reprot html de pw, y html y json de cucumber
 *externalAttachments permite asociar los trace si estan activados*
+```ts
 reporter: process.env.CI ? 'blob' : [
     ['html'],
     cucumberReporter('html', { outputFile: 'cucumber-report/index.html', externalAttachments: true, }),
     cucumberReporter('json', { outputFile: 'cucumber-report/report.json' })  
   ],
+```
 
 **Merge report con shards**
 Cuando ejecutamos por shard hay que mergear, es similar a PW nativo pero se usa este comando
