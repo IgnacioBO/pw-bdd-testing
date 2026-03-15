@@ -71,7 +71,7 @@ Generate and run the tests:
 
 npx bddgen && npx playwright test
 
-#### Fixtures
+### Fixtures
 **Fixstures para las pages**
 **GENERAR un fixture.ts -> ESTE DEBE ESTAR EN LA MISMA CARPETA DE LOS STEPS PARA NO GENERAR ERRORES**
 1. Genrar un fixture.ts para poder inyectar las page a los steps sin probelmas
@@ -127,7 +127,7 @@ npx bddgen && npx playwright test
       await loginPage.verifyLoginSuccess();
     });
     ```
-#### USAR TAGS
+### USAR TAGS
 Pueden ponerse tags en los .feauture
 ```feature
 @POM
@@ -143,7 +143,7 @@ Scenario: Compra de productos
 Si queremos ejecutarlo usar 
 npx bddgen --tags "@POM"; npx playwright test
 
-#### FIXTURES UTILES
+### FIXTURES UTILES
 
     $test and $testInfo
     $step
@@ -182,7 +182,7 @@ ejemplos:
   ```
 
 
-#### CUCUMBER REPORT
+### CUCUMBER REPORT
 ```ts
 reporter: 
 [cucumberReporter('html', 
@@ -200,14 +200,14 @@ reporter: process.env.CI ? 'blob' : [
   ],
 ```
 
-#### Merge report con shards
+### Merge report con shards
 
 Cuando ejecutamos por shard hay que mergear, es similar a PW nativo pero se usa este comando
 Merge reports (important to pass the --config option pointing to playwright.config.ts):
 
 `npx playwright merge-reports --config playwright.config.ts ./blob-report`
 
-#### Pasar datos entre steps (`ctx`, `world`)
+### Pasar datos entre steps (`ctx`, `world`)
 - Se puede usar dentgo de fixtures un type `ctx` del tipo que queramos
 - El mas simple es `Record<string, any>;` para usar como cqueramos por emploe usarlo `ctx.valor = "aa"`
   ```ts
@@ -286,7 +286,7 @@ Luego ne el fixture se puede jugar, aquo si tien el tag noauth, deja las cookes 
 });
 ```
 ---
-#### Con Fixture puede hacer un setup and teardown
+### Con Fixture puede hacer un setup and teardown
 
 La clave esta en el `tsawait use(...)`
 ```ts
@@ -325,7 +325,7 @@ await $testInfo.attach('log-evento', {
     }) 
 ```
 ---
-#### Como publicar en reports.cucumber.io
+### Como publicar en reports.cucumber.io
 1) Generas un archivo .ndjson de Cucumber Messages desde playwright-bdd.
 para eso agregar  
     ```ts
