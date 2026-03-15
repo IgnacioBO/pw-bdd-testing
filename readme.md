@@ -75,45 +75,45 @@ npx bddgen && npx playwright test
 **GENERAR un fixture.ts -> ESTE DEBE ESTAR EN LA MISMA CARPETA DE LOS STEPS PARA NO GENERAR ERRORES**
 1. Genrar un fixture.ts para poder inyectar las page a los steps sin probelmas
 **Ejemplo**
+```ts
+    import { test as base, createBdd } from 'playwright-bdd';
+    import { LoginPage } from '../pageobjects/login-page';
+    import { HomePage } from '../pageobjects/home-page';
+    import { ProductPage } from '../pageobjects/product-page';
+    import { CartPage } from '../pageobjects/cart-page';
+    import { CheckoutPage } from '../pageobjects/checkout-page';
 
-        import { test as base, createBdd } from 'playwright-bdd';
-        import { LoginPage } from '../pageobjects/login-page';
-        import { HomePage } from '../pageobjects/home-page';
-        import { ProductPage } from '../pageobjects/product-page';
-        import { CartPage } from '../pageobjects/cart-page';
-        import { CheckoutPage } from '../pageobjects/checkout-page';
+    type Fixtures = {
+        loginPage: LoginPage;
+        homePage: HomePage;
+        productPage: ProductPage;
+        cartPage: CartPage;
+        checkoutPage: CheckoutPage;
+    };
 
-        type Fixtures = {
-            loginPage: LoginPage;
-            homePage: HomePage;
-            productPage: ProductPage;
-            cartPage: CartPage;
-            checkoutPage: CheckoutPage;
-        };
+    export const test = base.extend<Fixtures>({
+        loginPage: async ({ page }, use) => {
+            await use(new LoginPage(page));
+        },
+        homePage: async ({ page }, use) => {
+            await use(new HomePage(page));
+        },
+        productPage: async ({ page }, use) => {
+            await use(new ProductPage(page));
+        },
+        cartPage: async ({ page }, use) => {
+            await use(new CartPage(page));
+        },
+        checkoutPage: async ({ page }, use) => {
+            await use(new CheckoutPage(page));
+        }
 
-        export const test = base.extend<Fixtures>({
-            loginPage: async ({ page }, use) => {
-                await use(new LoginPage(page));
-            },
-            homePage: async ({ page }, use) => {
-                await use(new HomePage(page));
-            },
-            productPage: async ({ page }, use) => {
-                await use(new ProductPage(page));
-            },
-            cartPage: async ({ page }, use) => {
-                await use(new CartPage(page));
-            },
-            checkoutPage: async ({ page }, use) => {
-                await use(new CheckoutPage(page));
-            }
+    });
 
-        });
-
-        export const { Given, When, Then } = createBdd(test);
-
+    export const { Given, When, Then } = createBdd(test);
+```
 2. Luego usarlo asi:
-    ```
+    ```ts
     import { Given, When, Then } from '../../config/fixtures';
 
     Given('Estoy logueado', async ({ page, loginPage }) => {
@@ -127,17 +127,17 @@ npx bddgen && npx playwright test
     ```
 **USAR TAGS**
 Pueden ponerse tags en los .feauture
+```feature
+@POM
+Scenario: Compra de productos
+    Given Estoy logueado
+    When Agrego un producto al carrito
+    Then Se completa la compra del productos
 
-    @POM
-    Scenario: Compra de productos
-        Given Estoy logueado
-        When Agrego un producto al carrito
-        Then Se completa la compra del productos
-
-    @POM2
-    Scenario: Compra de productos
-        Given Estoy logueado
-
+@POM2
+Scenario: Compra de productos
+    Given Estoy logueado
+```
 Si queremos ejecutarlo usar 
 npx bddgen --tags "@POM"; npx playwright test
 
@@ -156,26 +156,25 @@ Given('I do something', async ({ browserName, $test }) => {
 ```
 
 ejemplos:
-- $test.skip() // Se salta el test
-- await $testInfo.attach('producto-en-carrito', {
+- `$test.skip() // Se salta el test`
+- `await $testInfo.attach('producto-en-carrito', {
         body: await page.screenshot({path: 'screenshots/product-in-cart2.png'}),
         contentType: 'image/png'
-    }); //Para SS
-- console.log($step.title) //Imprimie el titulo del step
-- console.log($tags) //imprime un arrya con los tags
-- Overwrite the viewport for scenarios with the @mobile tag:
-- EJEMPLO de usar viepoer epsecifico si es @mobile
-import { test as base } from 'playwright-bdd';
-
-export const test = base.extend({
-  viewport: async ({ $tags, viewport }, use) => {
-    if ($tags.includes('@mobile')) {
-      viewport = { width: 375, height: 667 };
+    }); //Para SS`
+- `console.log($step.title)` //Imprimie el titulo del step
+- `console.log($tags)` //imprime un arrya con los tags
+- Overwrite the viewport for scenarios with the `@mobile` tag, EJEMPLO de usar viewer epsecifico si es `@mobile`
+  ```ts
+  import { test as base } from 'playwright-bdd';
+  export const test = base.extend({
+    viewport: async ({ $tags, viewport }, use) => {
+      if ($tags.includes('@mobile')) {
+        viewport = { width: 375, height: 667 };
+      }
+      await use(viewport);
     }
-    await use(viewport);
-  }
-});
-
+  });
+  ```
 
 **CUCUMBER REPORT**
 reporter: [cucumberReporter('html', { outputFile: 'cucumber-report/index.html', externalAttachments: true, })]
