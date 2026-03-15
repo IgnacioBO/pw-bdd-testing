@@ -285,7 +285,7 @@ Luego ne el fixture se puede jugar, aquo si tien el tag noauth, deja las cookes 
   },
 });
 ```
----
+
 ## Con Fixture puede hacer un setup and teardown
 
 La clave esta en el `tsawait use(...)`
@@ -323,8 +323,8 @@ await $testInfo.attach('log-evento', {
        body: "log desde el step de login",
       contentType: 'text/plain',
     }) 
-```
----
+``` 
+
 ## Como publicar en reports.cucumber.io
 1) Generas un archivo .ndjson de Cucumber Messages desde playwright-bdd.
 para eso agregar  
