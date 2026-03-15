@@ -203,53 +203,56 @@ reporter: process.env.CI ? 'blob' : [
 
 Cuando ejecutamos por shard hay que mergear, es similar a PW nativo pero se usa este comando
 Merge reports (important to pass the --config option pointing to playwright.config.ts):
-npx playwright merge-reports --config playwright.config.ts ./blob-report
 
-  
-**TODO: REVISAR paginas de HOOKS , aprender como manejarlo**
-**TODO: Revisar LA FORMA IDEAL de PASAR DATOS ENTRE ESCENARIOS Y STEPS**
-
+`npx playwright merge-reports --config playwright.config.ts ./blob-report`
 
 **PASAR DATOS ENTRE STEPS**
-- Sep uede usar dentrgo de fixtures un type ctx del tipo que queramos
-- El mas simple es Record<string, any>; para usar como cqueramos por emploe usarlo ctx.valor = "aa"
-
-type Ctx = Record<string, any>;
+- Se puede usar dentgo de fixtures un type `ctx` del tipo que queramos
+- El mas simple es `Record<string, any>;` para usar como cqueramos por emploe usarlo `ctx.valor = "aa"`
+  ```ts
+  type Ctx = Record<string, any>;
+  ```
 
 - Tambien puede ser ma estrcto si se require:
-type Ctx = {
-  newTapPromise: Promise<Page> 
-};
+  ```ts
+  type Ctx = {
+    newTapPromise: Promise<Page> 
+  };
+  ```
 
 - Luego agregarlo a los fixture:
-export const test = base.extend<{ ctx: Ctx }>({
-  ctx: async ({}, use) => {
-    const ctx = {} as Ctx;
-    await use(ctx);
-  },
-});
+  ```ts
+  export const test = base.extend<{ ctx: Ctx }>({
+    ctx: async ({}, use) => {
+      const ctx = {} as Ctx;
+      await use(ctx);
+    },
+  });
+  ```
 
 - Luego se usa:
-
+```ts
 Given('Estoy logueado', async ({ page, loginPage, ctx}) => {
     ctx.nuevoLoco ="Soy un valor en el contexto";
 }
-
+```
 
 **TODO: SE PUEDEN USAR HOOJS; AHI VEMOS COMO ES; ES SENCILLO ***
 **PERO EN VEZ DE HHOKS PEUDE USARSE FIXSTURE + PRJECTS**
 **REVISAR EJMEPLO: https://github.com/vitalets/playwright-bdd/blob/main/examples/auth/features/steps/fixtures.ts**
 Ese ejemplo usa un setup.ts y lueg o m pw.config.ts pone el prjet
- projects: [
+  ```ts
+  projects: [
     {
       name: 'auth',
       testDir: 'features/auth',
       testMatch: /setup\.ts/,
     },
+  ```
+similar a como lo vimos en el tuto de pw normal
 
-  similar a como lo vimos en el tuto de pw norml
-
-  luego ne el fixture se puede jugar, aquo si tien el tag noauth, deja las cookes y origins vacios, si no usa es storage
+luego ne el fixture se puede jugar, aquo si tien el tag noauth, deja las cookes y origins vacios, si no usa es storage
+```ts
   export const test = base.extend<Fixtures>({
   storageState: async ({ $tags, storageState }, use) => {
     // reset storage state for features/scenarios with @noauth tag
@@ -259,17 +262,17 @@ Ese ejemplo usa un setup.ts y lueg o m pw.config.ts pone el prjet
     await use(storageState);
   },
 });
+```
 
-*** Con Fixsute puede hacer un setup and teardown ***
+**Con Fixture puede hacer un setup and teardown**
 
-*La clave esta en el await use(...)*
-
+*La clave esta en el `tsawait use(...)`*
+```ts
 type Fixtures = {
-   ....
+   //....
     auth: LoginPage;
-   ....
+   //....
 };
-
 export const test = base.extend<Fixtures>({
     auth: async ({page}, use) => {
         log.debug("Ejecutando fixture de autenticación");
@@ -282,27 +285,33 @@ export const test = base.extend<Fixtures>({
         *await use(loginPage);*
         log.debug('Teardown de auth');
   },
-  ....
-
-*Todo En un fixture de Playwright, await use(...) parte el fixture en 2:*
-*Antes de await use(...) → setup*
-*Después de await use(...) → teardown*
-
-
+  //....
+```
+**Todo En un fixture de Playwright, await use(...) parte el fixture en 2:**
+**Antes de await use(...) → `setup`**
+**Después de await use(...) → `teardown`**
 
 
-**Para skipear los logs: skipAttachments: ['text/x.cucumber.log+plain']**
+
+
+**Para skipear los logs: `skipAttachments: ['text/x.cucumber.log+plain']`**
 
 
 **Hacer attach de logs en el reporte teniendo skip los logs fde consolas**
+```ts
 await $testInfo.attach('log-evento', {
        body: "log desde el step de login",
       contentType: 'text/plain',
     }) 
+```
 
-**como publicar en reports.cucumber.io**
+**Como publicar en reports.cucumber.io**
 1) Generas un archivo .ndjson de Cucumber Messages desde playwright-bdd.
-para eso agregar  cucumberReporter('message', { outputFile: 'cucumber-report/messages.ndjson', skipAttachments: ['text/x.cucumber.log+plain'] })  
+para eso agregar  
+    ```ts
+    cucumberReporter('message', 
+    { outputFile: 'cucumber-report/messages.ndjson', skipAttachments: ['text/x.cucumber.log+plain'] }) 
+    ```
 2) Ir a https://messages.cucumber.io/api/reports
 3) Buscar en las repsons headers "Location"
 4) Copiar la URL
