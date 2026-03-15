@@ -200,6 +200,7 @@ reporter: process.env.CI ? 'blob' : [
 ```
 
 **Merge report con shards**
+
 Cuando ejecutamos por shard hay que mergear, es similar a PW nativo pero se usa este comando
 Merge reports (important to pass the --config option pointing to playwright.config.ts):
 npx playwright merge-reports --config playwright.config.ts ./blob-report
