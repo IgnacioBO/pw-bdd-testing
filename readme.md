@@ -75,7 +75,7 @@ npx bddgen && npx playwright test
 **GENERAR un fixture.ts -> ESTE DEBE ESTAR EN LA MISMA CARPETA DE LOS STEPS PARA NO GENERAR ERRORES**
 1. Genrar un fixture.ts para poder inyectar las page a los steps sin probelmas
 **Ejemplo**
-```ts
+    ```ts
     import { test as base, createBdd } from 'playwright-bdd';
     import { LoginPage } from '../pageobjects/login-page';
     import { HomePage } from '../pageobjects/home-page';
@@ -111,7 +111,7 @@ npx bddgen && npx playwright test
     });
 
     export const { Given, When, Then } = createBdd(test);
-```
+    ```
 2. Luego usarlo asi:
     ```ts
     import { Given, When, Then } from '../../config/fixtures';
