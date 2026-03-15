@@ -1,6 +1,6 @@
 // hooks.ts
 import { BeforeWorker, AfterWorker, BeforeScenario, BeforeStep, AfterScenario, AfterStep } from './fixtures';
-import {log} from '../../config/logger';
+import {log} from '../../../config/logger';
 
 BeforeWorker(async ({ $workerInfo, browser }) => {
   log.info(`Iniciando el worker ${$workerInfo.workerIndex} con el navegador ${browser.browserType().name()}`);

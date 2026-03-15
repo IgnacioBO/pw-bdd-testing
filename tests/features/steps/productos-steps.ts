@@ -1,11 +1,11 @@
 import {test, expect, Locator} from '@playwright/test';
-import { env } from '../../config/env';
+import { env } from '../../../config/env';
 import { Product } from '../../models/product';
-import { log } from '../../config/logger';
+import { log } from '../../../config/logger';
 import { createBdd, DataTable } from 'playwright-bdd';
 import { LoginPage } from '../../pageobjects/login-page';
 
-import { Given, When, Then } from './fixtures';
+import { Given, When, Then } from '../support/fixtures';
 
 Given('Estoy logueado', async ({ page, loginPage, ctx, auth, $workerInfo, $testInfo}) => {
     ctx.nuevoLoco ="Soy un valor en el contexto";

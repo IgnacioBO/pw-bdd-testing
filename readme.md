@@ -49,6 +49,15 @@ Given('Estoy logueado', async ({ page }) => {
 });
 
 **x)LUEGO PUEDE USARSE ctrl+. en el feature para crear automaticametne los step**
+**X) Si no reconoce los steps, ir a la extension de cucuber, a settings y agregar los path de steps y features en "cucumber.features" y "cucumber.glue".**
+"cucumber.features": [
+        "**/*.feature",
+       ...
+],
+"cucumber.glue": [
+        "**/features/**/*.ts",
+        ....
+]
 **X)PERO ES MEJOR USAR npx bbdgen y sacarlos de la consola, porque asi los crea en el fomrato correcto**
 
 **Step 4) Run tests**

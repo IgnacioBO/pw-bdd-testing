@@ -4,8 +4,8 @@ import { HomePage } from '../../pageobjects/home-page';
 import { ProductPage } from '../../pageobjects/product-page';
 import { CartPage } from '../../pageobjects/cart-page';
 import { CheckoutPage } from '../../pageobjects/checkout-page';
-import { env } from '../../config/env';
-import { log } from '../../config/logger';
+import { env } from '../../../config/env';
+import { log } from '../../../config/logger';
 import { Product } from '../../models/product';
 
 type Ctx = Record<string, any>;

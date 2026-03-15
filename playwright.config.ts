@@ -3,9 +3,11 @@ import { cucumberReporter, defineBddConfig } from 'playwright-bdd';
 
 //Configuración para BDD, se le indica el archivo de features y el de steps
 const testDir = defineBddConfig({
-  features: 'features/*.feature',
-  steps: 'features/steps/*.ts',
-  //importTestFrom: './config/fixtures'
+  features: 'tests/features/**/*.feature',
+  steps: [
+    'tests/features/steps/**/*.ts',
+    'tests/features/support/**/*.ts',
+  ],
 });
 
 /**

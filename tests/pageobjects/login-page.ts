@@ -1,5 +1,5 @@
 import { expect, Locator, Page } from '@playwright/test';
-import { log } from '../config/logger';
+import { log } from '../../config/logger';
 
 export class LoginPage {
 

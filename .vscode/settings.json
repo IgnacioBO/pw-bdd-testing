@@ -1,0 +1,13 @@
+//Basic conf for cucumber full support extension
+{
+  "cucumberautocomplete.steps": ["*/features/steps/*.{ts,js}"],
+  "cucumberautocomplete.strictGherkinCompletion": false,
+  "cucumberautocomplete.strictGherkinValidation": false,
+  "cucumberautocomplete.smartSnippets": true,
+  "cucumberautocomplete.onTypeFormat": true,
+  "editor.quickSuggestions": {
+    "comments": false,
+    "strings": true,
+    "other": true
+  }
+}
