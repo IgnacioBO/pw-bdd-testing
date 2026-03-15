@@ -71,7 +71,8 @@ Generate and run the tests:
 
 npx bddgen && npx playwright test
 
-
+#### Fixtures
+**Fixstures para las pages**
 **GENERAR un fixture.ts -> ESTE DEBE ESTAR EN LA MISMA CARPETA DE LOS STEPS PARA NO GENERAR ERRORES**
 1. Genrar un fixture.ts para poder inyectar las page a los steps sin probelmas
 **Ejemplo**
@@ -126,7 +127,7 @@ npx bddgen && npx playwright test
       await loginPage.verifyLoginSuccess();
     });
     ```
-**USAR TAGS**
+#### USAR TAGS
 Pueden ponerse tags en los .feauture
 ```feature
 @POM
@@ -142,7 +143,7 @@ Scenario: Compra de productos
 Si queremos ejecutarlo usar 
 npx bddgen --tags "@POM"; npx playwright test
 
-**FIXTURES UTILES**
+#### FIXTURES UTILES
 
     $test and $testInfo
     $step
@@ -181,7 +182,7 @@ ejemplos:
   ```
 
 
-**CUCUMBER REPORT**
+#### CUCUMBER REPORT
 ```ts
 reporter: 
 [cucumberReporter('html', 
@@ -199,14 +200,14 @@ reporter: process.env.CI ? 'blob' : [
   ],
 ```
 
-**Merge report con shards**
+#### Merge report con shards
 
 Cuando ejecutamos por shard hay que mergear, es similar a PW nativo pero se usa este comando
 Merge reports (important to pass the --config option pointing to playwright.config.ts):
 
 `npx playwright merge-reports --config playwright.config.ts ./blob-report`
 
-**PASAR DATOS ENTRE STEPS**
+#### Pasar datos entre steps (`ctx`, `world`)
 - Se puede usar dentgo de fixtures un type `ctx` del tipo que queramos
 - El mas simple es `Record<string, any>;` para usar como cqueramos por emploe usarlo `ctx.valor = "aa"`
   ```ts
@@ -231,15 +232,36 @@ Merge reports (important to pass the --config option pointing to playwright.conf
   ```
 
 - Luego se usa:
-```ts
-Given('Estoy logueado', async ({ page, loginPage, ctx}) => {
-    ctx.nuevoLoco ="Soy un valor en el contexto";
-}
-```
-
-**TODO: SE PUEDEN USAR HOOJS; AHI VEMOS COMO ES; ES SENCILLO ***
+  ```ts
+  Given('Estoy logueado', async ({ page, loginPage, ctx}) => {
+      ctx.nuevoLoco ="Soy un valor en el contexto";
+  }
+  ```
+- Otra manera es usar `world` y que sea mas especifico, por ejemplo
+  ```ts
+  type World = {
+      productoRandomSel?: Product;
+      grupoDeProductos: Product[];
+  };
+  export const test = base.extend<Fixtures>({
+      world: async ({}, use) => {
+          const world: World = {
+              productoRandomSel: undefined, //Inicializo el producto random seleccionado como un objeto vacio
+              grupoDeProductos: [] as Product[], //Inicializo el grupo de productos como un array vacio, pero con el tipo Product[]
+          };
+          await use(world);
+      },
+  ```
+- Luego usar el `world` por ejmeplo:
+  ```ts
+  When('Agrego un producto al carrito', async ({homePage, world}) => {
+      world.productoRandomSel = await homePage.clickOneRandomProduct();
+  ```
+---
+**TODO: SE PUEDEN USAR HOOKS; AHI VEMOS COMO ES; ES SENCILLO**
 **PERO EN VEZ DE HHOKS PEUDE USARSE FIXSTURE + PRJECTS**
 **REVISAR EJMEPLO: https://github.com/vitalets/playwright-bdd/blob/main/examples/auth/features/steps/fixtures.ts**
+
 Ese ejemplo usa un setup.ts y lueg o m pw.config.ts pone el prjet
   ```ts
   projects: [
@@ -249,9 +271,9 @@ Ese ejemplo usa un setup.ts y lueg o m pw.config.ts pone el prjet
       testMatch: /setup\.ts/,
     },
   ```
-similar a como lo vimos en el tuto de pw normal
+Similar a como lo vimos en el tuto de pw normal
 
-luego ne el fixture se puede jugar, aquo si tien el tag noauth, deja las cookes y origins vacios, si no usa es storage
+Luego ne el fixture se puede jugar, aquo si tien el tag noauth, deja las cookes y origins vacios, si no usa es storage
 ```ts
   export const test = base.extend<Fixtures>({
   storageState: async ({ $tags, storageState }, use) => {
@@ -263,10 +285,10 @@ luego ne el fixture se puede jugar, aquo si tien el tag noauth, deja las cookes 
   },
 });
 ```
+---
+#### Con Fixture puede hacer un setup and teardown
 
-**Con Fixture puede hacer un setup and teardown**
-
-*La clave esta en el `tsawait use(...)`*
+La clave esta en el `tsawait use(...)`
 ```ts
 type Fixtures = {
    //....
@@ -291,9 +313,7 @@ export const test = base.extend<Fixtures>({
 **Antes de await use(...) → `setup`**
 **Después de await use(...) → `teardown`**
 
-
-
-
+---
 **Para skipear los logs: `skipAttachments: ['text/x.cucumber.log+plain']`**
 
 
@@ -304,8 +324,8 @@ await $testInfo.attach('log-evento', {
       contentType: 'text/plain',
     }) 
 ```
-
-**Como publicar en reports.cucumber.io**
+---
+#### Como publicar en reports.cucumber.io
 1) Generas un archivo .ndjson de Cucumber Messages desde playwright-bdd.
 para eso agregar  
     ```ts
