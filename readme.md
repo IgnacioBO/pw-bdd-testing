@@ -113,18 +113,18 @@ npx bddgen && npx playwright test
         export const { Given, When, Then } = createBdd(test);
 
 2. Luego usarlo asi:
-  ```
-  import { Given, When, Then } from '../../config/fixtures';
+    ```
+    import { Given, When, Then } from '../../config/fixtures';
 
-  Given('Estoy logueado', async ({ page, loginPage }) => {
-    const user: string = process.env.TEST_USER || ""; 
-    const pass: string = process.env.TEST_PASS || "";
-    const url: string = env.urls.frontend
-    log.info('Iniciando el test de compra de productos');
-    await loginPage.login(url, user, pass);  
-    await loginPage.verifyLoginSuccess();
-  });
-  ```
+    Given('Estoy logueado', async ({ page, loginPage }) => {
+      const user: string = process.env.TEST_USER || ""; 
+      const pass: string = process.env.TEST_PASS || "";
+      const url: string = env.urls.frontend
+      log.info('Iniciando el test de compra de productos');
+      await loginPage.login(url, user, pass);  
+      await loginPage.verifyLoginSuccess();
+    });
+    ```
 **USAR TAGS**
 Pueden ponerse tags en los .feauture
 
