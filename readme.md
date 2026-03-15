@@ -10,6 +10,7 @@ Instalar playwright-bdd
 **Step 1) Create configuration file**
 Create the following playwright.config.ts in the project root:
 
+```
 import { defineBddConfig } from 'playwright-bdd';
 
 const testDir = defineBddConfig({
@@ -23,6 +24,7 @@ export default defineConfig({
   testDir,
   ...
 });
+```
 
 
 **Step 2) Create feature file**
@@ -39,7 +41,8 @@ Feature: Playwright site
 **Step 3) Implement steps**
 Implement the steps in steps/XXXsteps.js:
 
-iimport { expect } from '@playwright/test';
+```ts
+import { expect } from '@playwright/test';
 import { createBdd } from 'playwright-bdd';
 
 const { Given, When, Then } = createBdd();
@@ -47,9 +50,10 @@ const { Given, When, Then } = createBdd();
 Given('Estoy logueado', async ({ page }) => {
   //
 });
-
+```
 **x)LUEGO PUEDE USARSE ctrl+. en el feature para crear automaticametne los step**
 **X) Si no reconoce los steps, ir a la extension de cucuber, a settings y agregar los path de steps y features en "cucumber.features" y "cucumber.glue".**
+```
 "cucumber.features": [
         "**/*.feature",
        ...
@@ -58,6 +62,8 @@ Given('Estoy logueado', async ({ page }) => {
         "**/features/**/*.ts",
         ....
 ]
+```
+
 **X)PERO ES MEJOR USAR npx bbdgen y sacarlos de la consola, porque asi los crea en el fomrato correcto**
 
 **Step 4) Run tests**
@@ -67,58 +73,58 @@ npx bddgen && npx playwright test
 
 
 **GENERAR un fixture.ts -> ESTE DEBE ESTAR EN LA MISMA CARPETA DE LOS STEPS PARA NO GENERAR ERRORES**
-1) Genrar un fixture.ts para poder inyectar las page a los steps sin probelmas
- - Ejemplo
- import { test as base, createBdd } from 'playwright-bdd';
-import { LoginPage } from '../pageobjects/login-page';
-import { HomePage } from '../pageobjects/home-page';
-import { ProductPage } from '../pageobjects/product-page';
-import { CartPage } from '../pageobjects/cart-page';
-import { CheckoutPage } from '../pageobjects/checkout-page';
+1. Genrar un fixture.ts para poder inyectar las page a los steps sin probelmas
+**Ejemplo**
 
-type Fixtures = {
-    loginPage: LoginPage;
-    homePage: HomePage;
-    productPage: ProductPage;
-    cartPage: CartPage;
-    checkoutPage: CheckoutPage;
-};
+        import { test as base, createBdd } from 'playwright-bdd';
+        import { LoginPage } from '../pageobjects/login-page';
+        import { HomePage } from '../pageobjects/home-page';
+        import { ProductPage } from '../pageobjects/product-page';
+        import { CartPage } from '../pageobjects/cart-page';
+        import { CheckoutPage } from '../pageobjects/checkout-page';
 
-export const test = base.extend<Fixtures>({
-    loginPage: async ({ page }, use) => {
-        await use(new LoginPage(page));
-    },
-    homePage: async ({ page }, use) => {
-        await use(new HomePage(page));
-    },
-    productPage: async ({ page }, use) => {
-        await use(new ProductPage(page));
-    },
-    cartPage: async ({ page }, use) => {
-        await use(new CartPage(page));
-    },
-    checkoutPage: async ({ page }, use) => {
-        await use(new CheckoutPage(page));
-    }
+        type Fixtures = {
+            loginPage: LoginPage;
+            homePage: HomePage;
+            productPage: ProductPage;
+            cartPage: CartPage;
+            checkoutPage: CheckoutPage;
+        };
 
-});
+        export const test = base.extend<Fixtures>({
+            loginPage: async ({ page }, use) => {
+                await use(new LoginPage(page));
+            },
+            homePage: async ({ page }, use) => {
+                await use(new HomePage(page));
+            },
+            productPage: async ({ page }, use) => {
+                await use(new ProductPage(page));
+            },
+            cartPage: async ({ page }, use) => {
+                await use(new CartPage(page));
+            },
+            checkoutPage: async ({ page }, use) => {
+                await use(new CheckoutPage(page));
+            }
 
-export const { Given, When, Then } = createBdd(test);
+        });
 
-2) Luego usarlo asi:
+        export const { Given, When, Then } = createBdd(test);
+
+2. Luego usarlo asi:
+```
 import { Given, When, Then } from '../../config/fixtures';
 
-
 Given('Estoy logueado', async ({ page, loginPage }) => {
-
-    const user: string = process.env.TEST_USER || ""; 
-    const pass: string = process.env.TEST_PASS || "";
-    const url: string = env.urls.frontend
-    log.info('Iniciando el test de compra de productos');
-    await loginPage.login(url, user, pass);  
-    await loginPage.verifyLoginSuccess();
+  const user: string = process.env.TEST_USER || ""; 
+  const pass: string = process.env.TEST_PASS || "";
+  const url: string = env.urls.frontend
+  log.info('Iniciando el test de compra de productos');
+  await loginPage.login(url, user, pass);  
+  await loginPage.verifyLoginSuccess();
 });
-
+```
 **USAR TAGS**
 Pueden ponerse tags en los .feauture
 
@@ -136,15 +142,18 @@ Si queremos ejecutarlo usar
 npx bddgen --tags "@POM"; npx playwright test
 
 **FIXTURES UTILES**
-$test and $testInfo
-$step
-$tags
 
-Estos se usan con fixtura 
+    $test and $testInfo
+    $step
+    $tags
+
+Estos se usan con fixture 
+```ts
 Given('I do something', async ({ browserName, $test }) => { 
   if (browserName === 'firefox') $test.skip();
   // ...
 });
+```
 
 ejemplos:
 - $test.skip() // Se salta el test
@@ -286,4 +295,4 @@ para eso agregar  cucumberReporter('message', { outputFile: 'cucumber-report/mes
 3) Buscar en las repsons headers "Location"
 4) Copiar la URL
 5) COn postman o automatico hacer un PUT con el archivo .ndjson (en postman debe ir en el body conmo binary)
-6) Luego ingesar a la url que se entrega al comienzo (https://reports.cucumber.io/reports/xxxxxx)
+6. Luego ingesar a la url que se entrega al comienzo (https://reports.cucumber.io/reports/xxxxxx).
