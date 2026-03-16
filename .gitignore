@@ -15,4 +15,4 @@ user-data/
 .env.*.local
 .features-gen/
 cucumber-report/
-report/
+reports/
