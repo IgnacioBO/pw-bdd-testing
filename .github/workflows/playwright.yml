@@ -110,7 +110,7 @@ jobs:
         uses: actions/download-artifact@v5
         with:
           name: merged-cucumber-report
-          path: cucumber-report
+          path: report/cucumber-report
 
       - name: Publish to Cucumber Reports
         id: publish
