@@ -46,13 +46,13 @@ export default defineConfig({
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   //Si es un shard run y en CI, se usa el reporte blob para luego mergear los reportes de cada shard en un reporte html
   //Si no es shard se generan los reportes (util cuando no es shard o cuando se quiere mergear los rerpotes)
-  reporter: process.env.CI ? (isShardRun ? [['blob', {outputFile: 'report/blob-report/report.zip'}]] : [
+  reporter: process.env.CI ? (isShardRun ? [['blob', {outputDir: 'report/blob-report/'}]] : [
    ['html', {outputFolder: 'report/playwright-report/', externalAttachments: true, skipAttachments: ['text/x.cucumber.log+plain'] }],
     cucumberReporter('html', { outputFile: 'report/cucumber-report/index.html', externalAttachments: true, skipAttachments: ['text/x.cucumber.log+plain'] }),
     cucumberReporter('json', { outputFile: 'report/cucumber-report/report.json', skipAttachments: ['text/x.cucumber.log+plain'] }),
     cucumberReporter('message', { outputFile: 'report/cucumber-report/messages.ndjson', skipAttachments: ['text/x.cucumber.log+plain'] })  
   ]) : [
-    ['blob', {outputFile: 'report/blob-report/report.zip'}],
+    ['blob', {outputDir: 'report/blob-report/'}],
     ['html', {outputFolder: 'report/playwright-report/', externalAttachments: true, skipAttachments: ['text/x.cucumber.log+plain'] }],
     cucumberReporter('html', { outputFile: 'report/cucumber-report/index.html', externalAttachments: true, skipAttachments: ['text/x.cucumber.log+plain'] }),
     cucumberReporter('json', { outputFile: 'report/cucumber-report/report.json', skipAttachments: ['text/x.cucumber.log+plain'] }), 
