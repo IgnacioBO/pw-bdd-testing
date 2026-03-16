@@ -47,7 +47,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: blob-report-${{ matrix.shardIndex }}
-        path: blob-report
+        path: report/blob-report
         retention-days: 1
 
   merge-reports:
@@ -87,17 +87,17 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: html-report--attempt-${{ github.run_attempt }}
-        path: cucumber-report
+        path: report/cucumber-report
         retention-days: 14
     
     - name: Verificar NDJSON
-      run: test -f cucumber-report/messages.ndjson
+      run: test -f report/cucumber-report/messages.ndjson
 
     - name: Upload merged cucumber ndjson
       uses: actions/upload-artifact@v4
       with:
           name: merged-cucumber-report
-          path: cucumber-report/messages.ndjson
+          path: report/cucumber-report/messages.ndjson
           retention-days: 1
   
   publish-cucumber-report:
@@ -118,7 +118,7 @@ jobs:
         run: |
           set -euo pipefail
 
-          FILE="cucumber-report/messages.ndjson"
+          FILE="report/cucumber-report/messages.ndjson"
 
           echo "Revisando archivo..."
           ls -l "$FILE"
